@@ -6,7 +6,11 @@ const ContentSelector = (props) => {
   return (
     <main className='selector'>
       <div>
-      {["🎥","🖼","PDF"].map(s=><button key={s} onClick={e=>{}}>{s}</button>)}
+      {["🎥","🖼","PDF"].map(s=><label className='input-button' key={s}><input type="file" onChange={e=>{
+        let formData = new FormData()
+        e.target.files.map(f=>formData.append(f.name,f))
+        fetch(process.env.VIDEO_SERVER_HOST+'/documents')
+      }}  accept={(s=="🎥")?"video/*":(s=="🖼")?"image/*":".pdf"}/>{s}</label>)}
       </div>
       <Content currentContent={currentContent} host={props.host}></Content>
     </main>

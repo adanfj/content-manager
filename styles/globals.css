@@ -26,6 +26,16 @@ li{
   margin-left: 35px;
 }
 
+input[type="file"] {
+  display: none;
+}
+
+.input-button{
+  border: 1px solid black;
+  padding: .25rem;
+  cursor: pointer;
+}
+
 main.selector,main.viewer{
   display: flex;
   width:100%;
@@ -39,6 +49,11 @@ main.viewer{
 main.selector{
   flex-direction: column;
 }
+main.selector>div{
+  display: flex;
+  gap: 1rem;
+}
+
 
 .file-tree li,.file-tree h2{
   cursor: pointer;
