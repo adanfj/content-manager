@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Basic&display=swap');
 * {
   padding: 0;
   margin: 0;
@@ -7,19 +6,21 @@
   --saturation: 89%;
   --brightness: 34%;
   --chart-background: hsl(248, 56%, 11%);
-  transition: all 0.4s ease-in;
+  transition: all 0.1s ease-in;
 }
 
 html {
   font-family: "Roboto", sans-serif;
 }
 :root{
-  font-size: 18px;
+  font-size: 20px;
+  font-family: 'Gentium Book Basic', serif;
 }
 
 body {
-  background-color: hsl(214deg 25% 25%);
-
+  padding: 10px;
+  /*background-color: rgb(71, 48, 80);*/
+  
 }
 
 li{
@@ -30,17 +31,39 @@ input[type="file"] {
   display: none;
 }
 
-.input-button{
+.content,.file-tree{
   border: 1px solid black;
+  border-radius: 3px;
+}
+
+.input-button{
   padding: .25rem;
   cursor: pointer;
+  border-radius: 3px;
+  background: silver;
+  border: 1px solid lightgray;
+  text-align: center;
 }
+
+.input-button:hover{
+  background: lightgray;
+  
+}
+
+.selected, .selected:hover,h2{
+  color: #222;
+}
+li:hover{
+  color:gray;
+}
+
 
 main.selector,main.viewer{
   display: flex;
   width:100%;
-  height: 100vh;
+  height: initial;
   padding: 1rem;
+  gap: 10px;
 }
 main.viewer{
   
@@ -48,19 +71,42 @@ main.viewer{
 
 main.selector{
   flex-direction: column;
+  overflow-y:scroll;
 }
-main.selector>div{
+.splitter{
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 1rem;
+}
+.upload-menu,.content-menu{
   display: flex;
   gap: 1rem;
 }
 
+.content-column{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 
 .file-tree li,.file-tree h2{
   cursor: pointer;
 }
 
+.file-tree *{
+  margin: 1rem;
+}
+
+.file-tree,.splitter,.upload-menu{
+  filter: sepia(0.25) hue-rotate(0);
+}
+
+
+
+
 .content {
-  padding: 1rem;
+  padding: 10px;
   width: 100%;
 }
 .content>iframe{
@@ -71,7 +117,7 @@ main.selector>div{
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 14%), 0 1px 5px 0 rgba(0, 0, 0, 12%), 0 3px 1px -2px rgba(0, 0, 0, 20%);
 }
 
-.btn, .gui, .sel, .warning-message {
+.btn, .gui, .sel, .warning-message,li {
   color: lightgray;
 }
 
