@@ -1,12 +1,13 @@
 import React from 'react'
 import $ from 'jquery'
-const FileTree = ({documents,images,videos,setCurrentContent}) => {
+const FileTree = ({documents,images,videos,setCurrentContent,BackComponent}) => {
   const selectContent = (element)=>{
     $(".selected").removeClass("selected")
     element.addClass("selected");
   }
   return (
     <div className='file-tree'>
+        {(BackComponent)?BackComponent:<></>}
         <h2>Documents (PDF)</h2>
         <ul>
           {documents.map(document => <li key={document} onClick={e=>{selectContent($(e.target)); setCurrentContent([document,"document"])}}>{document}</li>)}

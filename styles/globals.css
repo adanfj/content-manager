@@ -3,15 +3,9 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  --saturation: 89%;
-  --brightness: 34%;
-  --chart-background: hsl(248, 56%, 11%);
   transition: all 0.1s ease-in;
 }
 
-html {
-  font-family: "Roboto", sans-serif;
-}
 :root{
   font-size: 20px;
   font-family: 'Gentium Book Basic', serif;
@@ -20,6 +14,7 @@ html {
 body {
   padding: 10px;
   /*background-color: rgb(71, 48, 80);*/
+  /*background: hsl(250deg, 19%, 56%);*/
   
 }
 
@@ -37,12 +32,14 @@ input[type="file"] {
 }
 
 .input-button{
-  padding: .25rem;
   cursor: pointer;
   border-radius: 3px;
   background: silver;
   border: 1px solid lightgray;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 1rem;
 }
 
 .input-button:hover{
@@ -50,11 +47,17 @@ input[type="file"] {
   
 }
 
+input[type="text"]{
+  padding: 0.25rem;
+  font-family: 'Gentium Book Basic', serif;
+  font-size: inherit;
+}
+
 .selected, .selected:hover,h2{
   color: #222;
 }
 li:hover{
-  color:gray;
+  color:#777;
 }
 
 
@@ -64,9 +67,6 @@ main.selector,main.viewer{
   height: initial;
   padding: 1rem;
   gap: 10px;
-}
-main.viewer{
-  
 }
 
 main.selector{
@@ -90,19 +90,25 @@ main.selector{
   gap: 1rem;
 }
 
+.link{
+  margin: 0;
+  cursor:pointer;
+}
+
 .file-tree li,.file-tree h2{
   cursor: pointer;
 }
 
-.file-tree *{
+.file-tree *:not(.link){
   margin: 1rem;
 }
 
+.file-tree,.content{
+  background: hsl(0, 0%, 98%);
+}
 .file-tree,.splitter,.upload-menu{
   filter: sepia(0.25) hue-rotate(0);
 }
-
-
 
 
 .content {
@@ -113,93 +119,17 @@ main.selector{
   height: 100%;
 }
 
-.btn, .gui, .sel {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 14%), 0 1px 5px 0 rgba(0, 0, 0, 12%), 0 3px 1px -2px rgba(0, 0, 0, 20%);
+
+li {
+  color:#999;
 }
 
-.btn, .gui, .sel, .warning-message,li {
-  color: lightgray;
-}
-
-.btn {
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.gui {
-  display: grid;
-  justify-content: space-between;
-  align-items: center;
-  grid-area: gui;
-  background-color: hsl(214deg 40% 25%);
-  /*animation: navdown .6s;*/
-  position: sticky;
-  top: 0;
-  width: 100%;
-  z-index: 50;
-  /*transform: translateY(-90%);*/
-  grid-template-columns: clamp(203px, 100%, 350px) 30px;
+.separator{
+  border-left: 2px solid #444;
   height: auto;
-  padding: 10px 30px;
+  border-radius: 10px;
 }
 
-.gui>div {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.blackhole {
-  position: absolute;
-  border-radius: 9000px;
-  width: 0px;
-  height: 0px;
-  background: var(--chart-background);
-  animation: blackholeAnimation 1.2s;
-}
-
-#coins,#loginbutton{
-  animation: blackholeComponentAnimation 1.2s;
-}
-@keyframes navdown {
-  from {
-    top: -50px;
-  }
-
-  to {
-    top: 0;
-  }
-}
-
-
-.sel, .btn {
-  text-align: center;
-  letter-spacing: 2px;
-  transition: .2s ease-out;
-  height: 30px;
-  width: 100%;
-  text-transform: uppercase;
-  border: 0;
-  border-radius: 2px;
-  background-color: hsl(200deg, var(--saturation), var(--brightness));
-}
-
-.sel {
-  background-color: silver;
-}
-
-.sel::placeholder {
-  color: hsl(170deg, var(--saturation), var(--brightness))
-}
-
-.warning-message {
-  text-align: center;
-  margin: 17px 0;
-  animation: opacity 0.6s;
-}
 
 @keyframes opacity {
   from {
@@ -211,53 +141,11 @@ main.selector{
   }
 }
 
-
-.btn:hover, .sel:hover {
-  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 7px 4px 0 rgb(0 0 0 / 30%), 0 7px 10px -6px rgb(0 0 0 / 43%);
-}
-
 .content>* {
   width: 100%;
 }
 
-.chart>div {
-  border-radius: 3px;
-}
 
-.mark-boxes {
-  display: flex;
-  left: 14%;
-  width: 14%;
-  position: absolute;
-  gap: 4px;
-  justify-content: center;
-  height: 65px;
-  flex-direction: column;
-}
-
-.mark-boxes>div {
-  background: hsl(214deg 25% 25%);
-  height: 25px;
-  z-index: 1;
-  /*border: 2px solid hsl(120deg var(--saturation) var(--brightness));*/
-  border-radius: 3px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#loginbutton {
-  background-color: hsla(200deg, var(--saturation), var(--brightness),0.2);
-  border-radius:9000px;
-}
-
-.loading:nth-child(1) {
-  height: 600px;
-}
-
-.loading:nth-child(2) {
-  height: 400px;
-}
 
 .loading:empty, .loading *:empty {
   background: var(--chart-background);
