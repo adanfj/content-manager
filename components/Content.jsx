@@ -1,8 +1,8 @@
 import React from 'react'
 
-const Content = ({currentContent,host, onVideoChanged}) => {
+const Content = ({currentContent,host, onVideoChanged, style}) => {
   return (
-    <div className="content">
+    <div className="content" style={style}>
         {(currentContent[1]=="document")?<iframe src={`${host}/${currentContent[1]}/${currentContent[0]}`} frameBorder="0"></iframe>:(currentContent[1]=="image")?<img src={`${host}/${currentContent[1]}/${currentContent[0]}`}/>:<video onTimeUpdate={e=>{
           let time = e.target.currentTime.toFixed(2).split(".")
           let seconds = parseInt(time[0])
@@ -13,7 +13,7 @@ const Content = ({currentContent,host, onVideoChanged}) => {
           })+":"+(seconds%60).toLocaleString('en-US',{
             minimumIntegerDigits: 2
           })+"."+time[1]
-          onVideoChanged(time)
+          if(onVideoChanged) onVideoChanged(time)
         }} controls>
           <source src={`${host}/${currentContent[1]}/${currentContent[0]}`} type="video/mp4" />
           </video>}

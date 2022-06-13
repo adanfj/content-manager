@@ -16,7 +16,7 @@ const ContentSelector = (props) => {
   const [snippetTitle, setSnippetTitle] = useState("")
   const [startTime, setStartTime] = useState("00:00:00")
   const [endTime, setEndTime] = useState("00:00:00")
-  const [currentUpdater, setCurrentUpdater] = useState(t=>setEndTime)
+  const [currentUpdater, setCurrentUpdater] = useState(t => setEndTime)
   return (
     <main className='selector'>
       <div className='upload-menu'>
@@ -34,46 +34,47 @@ const ContentSelector = (props) => {
           })
         }} accept={fileTypes[s][0]} /><span>{s}</span></label>)}
         <div className="separator"></div>
-        <VideoSelector host={props.host}/>
+        <VideoSelector host={props.host} />
       </div>
-      <div className='content-menu'>
-        <div className='content-column'>
-          <Content currentContent={currentContent} host={props.host} onVideoChanged={currentUpdater}/>
-          <div className="splitter" style={{
-            display: (currentContent[1] != "video") ? "none" : ""
-          }}>
-            <TimeSelector onClick={e=>setCurrentUpdater(t=>setStartTime)}  value={startTime} onChangeValue={setStartTime}></TimeSelector>
-            <input value={topic} onChange={e => setTopic(e.target.value)} type="text" name="" id="" placeholder='Topic...' />
-            <TimeSelector onClick={e=>setCurrentUpdater(t=>setEndTime)} value={endTime} onChangeValue={setEndTime}></TimeSelector>
-            <input value={snippetTitle} onChange={e => setSnippetTitle(e.target.value)} style={{
-              gridColumn: "2 / 3"
-            }} type="text" name="" id="" placeholder='Snippet title...' />
+      <div>
+        <FileTree  setCurrentContent={setCurrentContent} media={props.media}/>
+        <Content style={{
+          gridColumn: "1/4",
+          gridRow:(currentContent[1] != "video")?"1/4":""
+        }} currentContent={currentContent} host={props.host} onVideoChanged={currentUpdater} />
 
-            <div className="input-button" style={{
-              gridColumn: "3 / 3",
-              cursor: (topic!==""&&snippetTitle!==""&&startTime!==endTime)?"pointer":"no-drop"
-            }} onClick={async e => {
-              if (topic!==""&&snippetTitle!==""&&startTime!==endTime) {
-                await fetch(props.host + "/split/video", {
-                  method: "POST",
-                  headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify({
-                    filename: currentContent[0],
-                    topic: topic,
-                    title: snippetTitle,
-                    startTime: startTime,
-                    endTime: endTime
-                  })
+        {currentContent[1] == "video" ? <>
+          <TimeSelector onClick={e => setCurrentUpdater(t => setStartTime)} value={startTime} onChangeValue={setStartTime}></TimeSelector>
+          <input value={topic} onChange={e => setTopic(e.target.value)} type="text" name="" id="" placeholder='Topic...' />
+          <TimeSelector onClick={e => setCurrentUpdater(t => setEndTime)} value={endTime} onChangeValue={setEndTime}></TimeSelector>
+          <input value={snippetTitle} onChange={e => setSnippetTitle(e.target.value)} type="text" name="" id="" placeholder='Snippet title...' 
+
+          />
+
+          <div className="input-button" style={{
+
+            cursor: (topic !== "" && snippetTitle !== "" && startTime !== endTime) ? "pointer" : "no-drop"
+          }} onClick={async e => {
+            if (topic !== "" && snippetTitle !== "" && startTime !== endTime) {
+              await fetch(props.host + "/split/video", {
+                method: "POST",
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  filename: currentContent[0],
+                  topic: topic,
+                  title: snippetTitle,
+                  startTime: startTime,
+                  endTime: endTime
                 })
-              }
-            }}><FontAwesomeIcon icon={faFileUpload} /></div>
+              })
+            }
+          }}><FontAwesomeIcon icon={faFileUpload} /></div>
 
-          </div>
-        </div>
-        <FileTree setCurrentContent={setCurrentContent} documents={props.documents} images={props.images} videos={props.videos}></FileTree>
+        </> : <></>}
+        
       </div>
 
     </main>
@@ -92,9 +93,11 @@ export async function getStaticProps() {
   return {
     props: {
       host: process.env.VIDEO_SERVER_HOST,
-      documents: documents,
-      images: images,
-      videos: videos
+      media:{
+        "Documents":documents,
+        "Images":images,
+        "Videos":videos
+      }
     },
     revalidate: 60
   }

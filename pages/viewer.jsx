@@ -18,7 +18,7 @@ const ContentViewer = (props) => {
       
       <FileTree
       BackComponent={<Link href="/selector"><div className='link' ><FontAwesomeIcon icon={faCrop}/></div></Link>}
-       setCurrentContent={setCurrentContent} documents={props.documents} images={props.images} videos={props.videos}></FileTree>
+       setCurrentContent={setCurrentContent} media={props.media}></FileTree>
       <Content currentContent={currentContent} host={props.host}></Content>
     </main>
   )
@@ -33,12 +33,15 @@ export async function getStaticProps() {
   images = await images.json()
   let videos = await fetch(process.env.VIDEO_SERVER_HOST+'/videos/topics')
   videos = await videos.json()
+  
   return {
     props: {
       host: process.env.VIDEO_SERVER_HOST,
-      documents: documents,
-      images: images,
-      videos: videos
+      media:{
+        "Documents":documents,
+        "Images":images,
+        "Videos":videos
+      }
     },
     revalidate: 60
   }

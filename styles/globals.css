@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Basic&display=swap');
+
 * {
   padding: 0;
   margin: 0;
@@ -6,19 +7,20 @@
   transition: all 0.1s ease-in;
 }
 
-:root{
+:root {
   font-size: 20px;
   font-family: 'Gentium Book Basic', serif;
 }
 
 body {
   padding: 10px;
+
   /*background-color: rgb(71, 48, 80);*/
   /*background: hsl(250deg, 19%, 56%);*/
-  
+
 }
 
-li{
+li {
   margin-left: 35px;
 }
 
@@ -26,12 +28,20 @@ input[type="file"] {
   display: none;
 }
 
-.content,.file-tree{
+.content,
+.file-tree {
   border: 1px solid black;
   border-radius: 3px;
+  max-height: 100%;
 }
 
-.input-button{
+.file-tree {
+  overflow-y: auto;
+  grid-column: 4/5;
+  grid-row: 1/4;
+}
+
+.input-button {
   cursor: pointer;
   border-radius: 3px;
   background: silver;
@@ -42,71 +52,150 @@ input[type="file"] {
   padding: 0.25rem 1rem;
 }
 
-.input-button:hover{
+.input-button:hover {
   background: lightgray;
-  
+
 }
 
-input[type="text"]{
+input[type="text"] {
   padding: 0.25rem;
   font-family: 'Gentium Book Basic', serif;
   font-size: inherit;
 }
 
-.selected, .selected:hover,h2{
+.selected,
+.selected:hover,
+h2 {
   color: #222;
 }
-li:hover{
-  color:#777;
+
+li:hover {
+  color: #777;
 }
 
+video {
+  height: 100%;
+}
 
-main.selector,main.viewer{
+main.selector,
+main.viewer {
   display: flex;
-  width:100%;
-  height: initial;
+  width: 100%;
+  height: 95vh;
   padding: 1rem;
   gap: 10px;
 }
 
-main.selector{
+main.selector {
   flex-direction: column;
-  overflow-y:scroll;
 }
-.splitter{
+
+.selector>div:nth-child(2) {
   display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(20px, 1fr)) 2fr;
+  grid-template-rows: 1fr repeat(2, 40px);
+  gap: 10px;
 }
-.upload-menu,.content-menu{
+
+.selector>div:nth-child(2)>input:nth-child(3) {
+  grid-column: 1 / 2;
+}
+
+.selector>div:nth-child(2)>input:nth-child(6) {
+  grid-column: 2 / 3;
+}
+.upload-menu,
+.content-menu {
   display: flex;
   gap: 1rem;
 }
 
-.content-column{
+@media screen and (max-width: 1045px) {
+
+  .upload-menu{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(2,1fr);
+  }
+  .upload-menu>*{
+    width: 100%;
+  }
+  .separator{
+    grid-column: 1/5;
+  }
+
+  .separator{
+    display: none;
+  }
+
+  .selector>div:nth-child(2) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+
+  .file-tree,
+  .content,
+  .selector>div:nth-child(2)>.input-button {
+    grid-column: 1 / 3;
+  }
+
+  .selector>div:nth-child(2)>input:nth-child(4) {
+    grid-column: 1 / 2;
+  }
+
+  .selector>div:nth-child(2)>input:nth-child(5) {
+    grid-column: 2 / 3;
+    grid-row: 5/6;
+  }
+
+  .selector>div:nth-child(2)>input:nth-child(6) {
+    grid-column: 2 / 3;
+  }
+}
+
+.splitter {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+
+
+.content-menu {
+  height: 100%;
+}
+
+.content-column {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.link{
-  margin: 0;
-  cursor:pointer;
-}
 
-.file-tree li,.file-tree h2{
+.link {
+  margin: 0;
   cursor: pointer;
 }
 
-.file-tree *:not(.link){
+.file-tree li,
+.file-tree h2 {
+  cursor: pointer;
+}
+
+.file-tree *:not(.link) {
   margin: 1rem;
 }
 
-.file-tree,.content{
+.file-tree,
+.content {
   background: hsl(0, 0%, 98%);
 }
-.file-tree,.splitter,.upload-menu{
+
+.file-tree,
+.splitter,
+.upload-menu {
   filter: sepia(0.25) hue-rotate(0);
 }
 
@@ -115,16 +204,17 @@ main.selector{
   padding: 10px;
   width: 100%;
 }
-.content>iframe{
+
+.content>iframe {
   height: 100%;
 }
 
 
 li {
-  color:#999;
+  color: #999;
 }
 
-.separator{
+.separator {
   border-left: 2px solid #444;
   height: auto;
   border-radius: 10px;
@@ -143,15 +233,18 @@ li {
 
 .content>* {
   width: 100%;
+  height: 100%;
 }
 
 
 
-.loading:empty, .loading *:empty {
+.loading:empty,
+.loading *:empty {
   background: var(--chart-background);
 }
 
-.loading:empty::after, .loading *:empty::after {
+.loading:empty::after,
+.loading *:empty::after {
   content: "";
   display: block;
   width: 100%;
