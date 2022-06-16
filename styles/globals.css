@@ -227,11 +227,22 @@ main.selector {
   }
   .upload-menu{
     display: grid;
+    align-items: center;
     grid-template-columns: repeat(4,1fr);
     grid-template-rows: repeat(2,1fr);
-  }
-  .upload-menu>*{
     width: 100%;
+  }
+  .upload-menu>*:nth-child(6){
+    grid-column: 1/5;
+    width: 100%;
+  }
+  .upload-menu>*:nth-child(1),.upload-menu>*:nth-child(2),.upload-menu>*:nth-child(3),.upload-menu>*:nth-child(4){
+    width: 70%;
+    justify-self: center;
+    height: 100%;
+  }
+  .upload-menu>*:nth-child(7){
+    grid-column: 1/4;
   }
   .separator{
     grid-column: 1/5;
@@ -245,6 +256,8 @@ main.selector {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
     height:150%;
+    gap:0;
+    row-gap: 10px;
   }
   .viewer{
     flex-direction: column-reverse;
