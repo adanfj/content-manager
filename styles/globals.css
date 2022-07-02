@@ -27,6 +27,14 @@ li {
   transition: all 0.3s;
 }
 
+nav{
+  display: flex;
+  justify-content: space-between;
+}
+nav>div{
+  display: flex;
+}
+
 input[type="file"] {
   display: none;
 }
@@ -60,7 +68,7 @@ input[type="file"] {
 
 }
 
-input[type="text"] {
+input[type="text"], input[type="password"]{
   padding: 0.25rem;
   font-family: inherit;
   font-size: inherit;
@@ -81,12 +89,27 @@ video {
 }
 
 main.selector,
-main.viewer {
+main.viewer{
+  height: 95vh;
   display: flex;
   width: 100%;
-  height: 95vh;
   padding: 1rem;
   gap: 10px;
+}
+main.login {
+  display:flex;
+  justify-content: center;
+  width:100%;
+}
+main.login>div{
+  width:min-content;
+  gap:10px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+main.login>div>.input-button{
+  width:15%;
 }
 
 main.selector {
@@ -179,6 +202,13 @@ main.selector {
   border-radius: 10px;
 }
 
+.nav-content{
+  opacity:0;
+  transition:0.5s;
+}
+.fade-in{
+  opacity:1;
+}
 
 @keyframes opacity {
   from {
@@ -228,9 +258,10 @@ main.selector {
   .upload-menu{
     display: grid;
     align-items: center;
-    grid-template-columns: repeat(4,1fr);
-    grid-template-rows: repeat(2,1fr);
+    /*grid-template-columns: repeat(4,1fr);
+    grid-template-rows: repeat(2,1fr);*/
     width: 100%;
+    max-width: 100vw;
   }
   .upload-menu>*:nth-child(6){
     grid-column: 1/5;

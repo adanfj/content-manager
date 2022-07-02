@@ -7,7 +7,7 @@ const Folder = ({folderName,topic,fileList,selectContent,setCurrentContent,conte
         {(rootFolder)?<h2 onClick={e=>{setElementsVisible(!elementsVisible)}}>{elementsVisible?"-":"+"} {folderName}</h2>:
         <h4 onClick={e=>{setElementsVisible(!elementsVisible)}}>{elementsVisible?"-":"+"} {folderName}</h4>}
         <ul >
-            {(elementsVisible)?fileList.sort().map(m =>
+            {(fileList&&elementsVisible)?fileList.sort().map(m =>
                 <File key={m} topic={topic} setCurrentContent={setCurrentContent} fileName={m} selectContent={selectContent} contentType={contentType} host={host} editable={select}/>):<></>}
             {elementsVisible?children:<></>}
         </ul>

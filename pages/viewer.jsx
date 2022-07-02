@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Content from '../components/Content'
 import FileTree from '../components/FileTree'
 import Link from 'next/link'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrop } from '@fortawesome/free-solid-svg-icons'
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { checkCookie } from '../lib/cookie';
 /*
 import * as express from 'express'
 import * as fs from 'fs'
 import * as path from 'path'
 */
-const ContentViewer = (props) => {
+const ContentViewer = ({media,host}) => {
   const [currentContent, setCurrentContent] = useState(["", "documents"])
-
+  /*useEffect(() => {
+    const router = useRouter()
+    if (!login||login==false) router.push("/login")
+  }, [])*/
   return (
-
     <main className='viewer'>
       <Head>
         <title>A Personal Viewer</title>
@@ -23,8 +27,8 @@ const ContentViewer = (props) => {
       </Head>
       <FileTree
         BackComponent={<Link href="/selector"><div className='link' ><FontAwesomeIcon icon={faCrop} /></div></Link>}
-        setCurrentContent={setCurrentContent} media={props.media}></FileTree>
-      <Content currentContent={currentContent} host={props.host}></Content>
+        setCurrentContent={setCurrentContent} media={media}></FileTree>
+      <Content currentContent={currentContent} host={host}></Content>
     </main>
   )
 }
@@ -32,12 +36,20 @@ const ContentViewer = (props) => {
 export default ContentViewer
 
 export async function getStaticProps() {
-  let documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents')
-  documents = await documents.json()
-  let images = await fetch(process.env.VIDEO_SERVER_HOST + '/images')
-  images = await images.json()
-  let videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos/topics')
-  videos = await videos.json()
+  let documents, images, videos
+  try {
+    documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents')
+    documents = await documents.json()
+    images = await fetch(process.env.VIDEO_SERVER_HOST + '/images')
+    images = await images.json()
+    videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos/topics')
+    videos = await videos.json()
+  }
+  catch (e) {
+    documents = ["test1.pdf"]
+    images = ["test1.png"]
+    videos = ["test1.mp4"]
+  }
 
   return {
     props: {
@@ -46,7 +58,8 @@ export async function getStaticProps() {
         "Documents": documents,
         "Images": images,
         "Videos": videos
-      }
+      },
+      login: checkCookie("username")
     },
     revalidate: 60
   }

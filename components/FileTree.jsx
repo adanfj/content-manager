@@ -10,23 +10,26 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
     element.addClass("selected");
   }
 
-  const separateArray = arr => {
+  const separateArray = (arr) => {
     var topic = {}
-    var root = arr.filter(v => v.split("/").length < 2)
-    arr.filter(v => v.split("/").length >= 2).map(v => v.split("/")).forEach(v => {
-      if (topic[v[0]] == null) topic[v[0]] = []
-      topic[v[0]] = [...topic[v[0]], v[1]]
-    })
+    var root = (arr.length>0) ? arr.filter(v => v.split("/").length < 2) : []
+    if (arr.length > 0) {
+      arr.filter(v => v.split("/").length >= 2).map(v => v.split("/")).forEach(v => {
+        if (topic[v[0]] == null) topic[v[0]] = []
+        topic[v[0]] = [...topic[v[0]], v[1]]
+      })
+    }
     return [root, topic]
   }
-  Object.keys(media).map(m => separateArray(media[m]))
+  
+  //Object.keys(media).map(m => separateArray(media[m]))
 
   return (
     <div className='file-tree' style={style}>
       {(BackComponent) ? BackComponent : <></>}
       {
         Object.keys(media).map(k => {
-          const mArr = separateArray(media[k])
+          let mArr = separateArray(media[k])
           return <Folder
             key={k}
             folderName={k}
@@ -50,20 +53,6 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
                   selectContent={selectContent} />)
             }
           </Folder>
-          return <React.Fragment key={k}>
-            <h2>{k}</h2>
-            <ul>
-              {mArr[0].sort().map(m =>
-                <li key={m} ><div onClick={e => {
-                  selectContent($(e.target)); setCurrentContent([m, k.toLowerCase().slice(0, -1)]);
-                  try { $(".content > video")[0].load(); }
-                  catch (e) { }
-                }}>{m}</div>{(select) ? <span><FontAwesomeIcon style={{ margin: "0" }} fixedWidth size="xs" icon={faRemove} /></span> : <></>}
-                </li>
-              )}
-
-            </ul>
-          </React.Fragment>
         })
       }
     </div>
