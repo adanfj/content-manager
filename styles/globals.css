@@ -100,8 +100,13 @@ main.login {
   display:flex;
   justify-content: center;
   width:100%;
+  
 }
 main.login>div{
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 1rem;
+  background: #eee;
   width:min-content;
   gap:10px;
   display:flex;
@@ -110,6 +115,11 @@ main.login>div{
 }
 main.login>div>.input-button{
   width:15%;
+}
+main.login>div>div{
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 main.selector {
