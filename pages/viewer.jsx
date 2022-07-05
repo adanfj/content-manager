@@ -5,8 +5,6 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrop } from '@fortawesome/free-solid-svg-icons'
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { checkCookie } from '../lib/cookie';
 /*
 import * as express from 'express'
 import * as fs from 'fs'
@@ -35,20 +33,50 @@ const ContentViewer = ({media,host}) => {
 
 export default ContentViewer
 
-export async function getStaticProps() {
-  let documents, images, videos
+export async function getServerSideProps({req,res}) {
+  let documents, images, videos,username=req.cookies.username
   try {
-    documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents')
+    documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
     documents = await documents.json()
-    images = await fetch(process.env.VIDEO_SERVER_HOST + '/images')
-    images = await images.json()
-    videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos/topics')
+
+    videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
     videos = await videos.json()
+
+    images = await fetch(process.env.VIDEO_SERVER_HOST + '/images', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
+    images = await images.json()
+    
   }
   catch (e) {
-    documents = ["test1.pdf"]
-    images = ["test1.png"]
-    videos = ["test1.mp4"]
+    documents = []
+    images = []
+    videos = []
   }
 
   return {
@@ -58,9 +86,8 @@ export async function getStaticProps() {
         "Documents": documents,
         "Images": images,
         "Videos": videos
-      },
-      login: checkCookie("username")
+      }
     },
-    revalidate: 60
+    //revalidate: 60
   }
 }

@@ -3,13 +3,12 @@ import { faDoorOpen, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import bcryptjs from 'bcryptjs'
 import React, { useState } from 'react'
-import useCookie from 'react-use-cookie'
 
 const register = ({ host }) => {
     const [pwd, setPwd] = useState("")
     const [rptpwd, setRptPwd] = useState("")
     const [username, setUsername] = useState("")
-    const [loggedIn, setLoggedIn] = useCookie('username', "")
+    const [cookies, setCookie, removeCookie] = useCookies(["username"]);
     return (
         <main className="login">
             <div>
@@ -27,7 +26,7 @@ const register = ({ host }) => {
                     <input type="password" name="rptpwd" id="rptpwd" value={rptpwd} onInput={e => setRptPwd(e.target.value)} />
                 </div>
                 {
-                    pwd == rptpwd && pwd.length > 0 && username.length > 0 ? <div className="input-button" onClick={async e => {
+                    pwd == rptpwd && pwd.length > 0 && username.length > 0 && username!="root" ? <div className="input-button" onClick={async e => {
                         var salt = bcryptjs.genSaltSync(10);
                         var hash = bcryptjs.hashSync(pwd, salt);
                         const response = await fetch(host + "/register", {
@@ -43,7 +42,7 @@ const register = ({ host }) => {
                         })
                         response = await response.json()
                         if (response.login) {
-                            setLoggedIn(username,{
+                            setCookie("username", username, {
                                 days: 1,
                                 SameSite: 'Strict',
                                 Secure: true,

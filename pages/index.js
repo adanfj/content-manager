@@ -2,10 +2,9 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { checkCookie } from '../lib/cookie'
 import styles from '../styles/Home.module.css'
 
-export default function Home({ login }) {
+export default function Home({ }) {
 
   return (
     <div className={styles.container}>
@@ -70,12 +69,4 @@ export default function Home({ login }) {
       </footer>
     </div>
   )
-}
-
-export async function getServerSideProps() {
-  return {
-    props: {
-      login: checkCookie("username")
-    }
-  }
 }

@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import Content from '../components/Content'
 import FileTree from '../components/FileTree'
 import TimeSelector from '../components/TimeSelector'
 
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowRotateLeft, faCrop, faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRotateLeft, faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import VideoSelector from '../components/VideoSelector'
 import Head from 'next/head'
-import NavBar from '../components/NavBar'
-import { useRouter } from 'next/router'
-import { checkCookie } from '../lib/cookie'
-
+import { useCookies } from 'react-cookie'
 
 const ContentSelector = (props) => {
   const [currentContent, setCurrentContent] = useState(["", "documents"])
@@ -21,13 +18,14 @@ const ContentSelector = (props) => {
   const [startTime, setStartTime] = useState("00:00:00")
   const [endTime, setEndTime] = useState("00:00:00")
   const [currentUpdater, setCurrentUpdater] = useState(t => setEndTime)
-/*
-  useEffect(() => {
-    const router = useRouter()
-    if(!login)router.push("/login")
-  }, [])
-  */
-
+  const [media, setMedia] = useState(props.media)
+  const [userMedia, setUserMedia] = useState({...props.user_media})
+  const [cookies, setCookie, removeCookie] = useCookies(["username"]);
+  useLayoutEffect(() =>{
+    setUserMedia({...props.user_media})
+    
+  }, [props.user_media])
+  
   return (
     <main className='selector'>
       <Head>
@@ -56,7 +54,47 @@ const ContentSelector = (props) => {
 
 
       <div>
-        <FileTree host={props.host} select={true} setCurrentContent={setCurrentContent} media={props.media} />
+        <FileTree host={props.host} select={true} setCurrentContent={setCurrentContent} media={media} onTriggerAddFileToPersonalList={
+          (fileName, contentType, topic) => {
+              const filename=(topic?topic+"/":"")+fileName
+              if(typeof props.user_media[contentType]=="object")props.user_media[contentType]=Object.values(props.user_media[contentType])
+              if(!props.user_media[contentType].includes(filename)) props.user_media[contentType]=[...props.user_media[contentType],filename]
+              else props.user_media[contentType]=props.user_media[contentType].filter(v=>v!=filename)
+              setUserMedia({...props.user_media})
+              fetch(props.host + "/videos/edit", {
+                method: "POST",
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  username: cookies.username,
+                  json:props.user_media["Videos"]
+                })
+              })
+              fetch(props.host + "/images/edit", {
+                method: "POST",
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  username: cookies.username,
+                  json:props.user_media["Images"]
+                })
+              })
+              fetch(props.host + "/documents/edit", {
+                method: "POST",
+                headers: {
+                  "Accept": "application/json",
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                  username: cookies.username,
+                  json:props.user_media["Documents"]
+                })
+              })
+          }} />
         <Content style={{
           gridColumn: "1/4",
           //gridRow:(currentContent[1] != "video")?"1/4":""
@@ -95,7 +133,8 @@ const ContentSelector = (props) => {
         </> : <></>}
 
       </div>
-
+      <h1 >Selected Files:</h1>
+      <FileTree host={props.host} setCurrentContent={setCurrentContent} media={props.user_media} />
     </main>
 
   )
@@ -103,21 +142,93 @@ const ContentSelector = (props) => {
 
 export default ContentSelector
 
-export async function getServerSideProps() {
-  let documents,images,videos
-  try{
-    documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents')
+export async function getServerSideProps({ req, res }) {
+  let documents, images, videos, username = "root", user_documents, user_images, user_videos
+  try {
+    documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
     documents = await documents.json()
-    images = await fetch(process.env.VIDEO_SERVER_HOST + '/images')
-    images = await images.json()
-    videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos/topics')
+    videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
     videos = await videos.json()
+    images = await fetch(process.env.VIDEO_SERVER_HOST + '/images', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
+    images = await images.json()
+
+
+
   }
-  catch(e){
-    documents = ["test1.pdf"]
-    images = ["test1.png"]
-    videos = ["test1.mp4"]
+  catch (e) {
+    documents = []
+    images = []
+    videos = []
   }
+  try {
+    username = req.cookies.username
+    user_documents = await fetch(process.env.VIDEO_SERVER_HOST + '/documents', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
+    user_documents = await user_documents.json()
+    user_videos = await fetch(process.env.VIDEO_SERVER_HOST + '/videos', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
+    user_videos = await user_videos.json()
+    user_images = await fetch(process.env.VIDEO_SERVER_HOST + '/images', {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: username
+      })
+    })
+    user_images = await user_images.json()
+  } catch (error) {
+    console.log(error)
+    user_documents = []
+    user_images = []
+    user_videos = []
+  }
+  console.log(user_videos)
   return {
     props: {
       host: process.env.VIDEO_SERVER_HOST,
@@ -126,7 +237,11 @@ export async function getServerSideProps() {
         "Images": images,
         "Videos": videos
       },
-      login: checkCookie("username")
+      user_media: {
+        "Documents": user_documents,
+        "Images": user_images,
+        "Videos": user_videos
+      }
     }
   }
 }

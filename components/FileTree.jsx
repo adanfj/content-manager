@@ -1,9 +1,7 @@
 import React from 'react'
 import $ from 'jquery'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRemove } from '@fortawesome/free-solid-svg-icons'
 import Folder from './FileTree/Folder'
-const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host }) => {
+const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host,onTriggerAddFileToPersonalList }) => {
 
   const selectContent = (element) => {
     $(".selected").removeClass("selected")
@@ -21,8 +19,6 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
     }
     return [root, topic]
   }
-  
-  //Object.keys(media).map(m => separateArray(media[m]))
 
   return (
     <div className='file-tree' style={style}>
@@ -39,7 +35,8 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
             contentType={k}
             setCurrentContent={setCurrentContent}
             host={host}
-            selectContent={selectContent}>
+            selectContent={selectContent}
+            onTriggerAddFileToPersonalList={onTriggerAddFileToPersonalList}>
             {
               Object.keys(mArr[1]).map(topic =>
                 <Folder key={topic}
@@ -50,7 +47,8 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
                   contentType={k}
                   host={host}
                   setCurrentContent={setCurrentContent}
-                  selectContent={selectContent} />)
+                  selectContent={selectContent} 
+                  onTriggerAddFileToPersonalList={onTriggerAddFileToPersonalList}/>)
             }
           </Folder>
         })
