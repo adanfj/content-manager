@@ -57,7 +57,7 @@ const register = ({ host }) => {
 
 export default register
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
     return {
         props: {
             host: process.env.VIDEO_SERVER_HOST

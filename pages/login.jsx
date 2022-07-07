@@ -52,7 +52,7 @@ const login = ({ host }) => {
                 SameSite: 'Strict',
                 Secure: true,
               })
-              router.push("/viewer")
+              router.push("/")
             }
             else{
               setError(true)
@@ -77,7 +77,6 @@ export async function getStaticProps() {
   return {
     props: {
       host: process.env.VIDEO_SERVER_HOST,
-    },
-    revalidate: 60
+    }
   }
 }

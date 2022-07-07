@@ -1,7 +1,7 @@
 import React from 'react'
 import $ from 'jquery'
 import Folder from './FileTree/Folder'
-const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host,onTriggerAddFileToPersonalList }) => {
+const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host, onTriggerAddFileToPersonalList }) => {
 
   const selectContent = (element) => {
     $(".selected").removeClass("selected")
@@ -10,7 +10,7 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
 
   const separateArray = (arr) => {
     var topic = {}
-    var root = (arr.length>0) ? arr.filter(v => v.split("/").length < 2) : []
+    var root = (arr.length > 0) ? arr.filter(v => v.split("/").length < 2) : []
     if (arr.length > 0) {
       arr.filter(v => v.split("/").length >= 2).map(v => v.split("/")).forEach(v => {
         if (topic[v[0]] == null) topic[v[0]] = []
@@ -19,7 +19,7 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
     }
     return [root, topic]
   }
-
+  console.log(media["Videos"])
   return (
     <div className='file-tree' style={style}>
       {(BackComponent) ? BackComponent : <></>}
@@ -47,8 +47,8 @@ const FileTree = ({ select, media, setCurrentContent, BackComponent, style, host
                   contentType={k}
                   host={host}
                   setCurrentContent={setCurrentContent}
-                  selectContent={selectContent} 
-                  onTriggerAddFileToPersonalList={onTriggerAddFileToPersonalList}/>)
+                  selectContent={selectContent}
+                  onTriggerAddFileToPersonalList={onTriggerAddFileToPersonalList} />)
             }
           </Folder>
         })
